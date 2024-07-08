@@ -1,4 +1,4 @@
-var toDoListApp = (function(){
+var toDoListApp = (function () {
   let tasks = [];
   const tasksList = document.getElementById("list");
   const addTaskInput = document.getElementById("add");
@@ -26,7 +26,6 @@ var toDoListApp = (function(){
     }
 
     tasksCounter.innerHTML = tasks.length;
-    console.log(tasks);
   }
 
   function markTaskAsComplete(taskId) {
@@ -65,20 +64,28 @@ var toDoListApp = (function(){
       addTask(task);
     }
   }
-  addTaskInput.addEventListener("keypress", handleInputKeypress);
 
   async function fetchData() {
-    let resObj = await fetch("https://jsonplaceholder.typicode.com/todos");
-    let jsonObj = await resObj.json();
-    tasks = jsonObj.slice(0, 10);
-    renderList();
+    try {
+      let resObj = await fetch("https://jsonplaceholder.typicode.com/todos");
+      let jsonObj = await resObj.json();
+      tasks = jsonObj.slice(0, 10);
+      renderList();
+    } catch (err) {
+      console.log(err);
+    }
   }
-  fetchData();
+
+  function initializeApp() {
+    fetchData();
+    addTaskInput.addEventListener("keypress", handleInputKeypress);
+  }
+  initializeApp();
 
   return {
     tasks: tasks,
     markTaskAsComplete: markTaskAsComplete,
-    deleteTask: deleteTask
+    deleteTask: deleteTask,
   };
 
   // #example of event Deligation
@@ -99,4 +106,4 @@ var toDoListApp = (function(){
 
   // #example of event Deligation
   // document.addEventListener('click', handleClickListener);
-})()
+})();
