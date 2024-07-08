@@ -11,11 +11,11 @@ function renderList() {
     const li = document.createElement("li");
     li.innerHTML = `<input type="checkbox" 
               id="${task.id}" 
-              ${task.done ? "checked" : ""}  
+              ${task.completed && "checked"}  
               class="custom-checkbox" 
               onclick='markTaskAsComplete(${task.id})'>
 
-              <label for="${task.id}">${task.text}</label>
+              <label for="${task.id}">${task.title}</label>
               <img src="bin.png" c
               lass="delete" 
               id="${task.id}" 
@@ -25,11 +25,12 @@ function renderList() {
   }
 
   tasksCounter.innerHTML = tasks.length;
+  console.log(tasks);
 }
 
 function markTaskAsComplete(taskId) {
   let newTasks = tasks.map((obj) => {
-    if (obj.id == taskId) return { ...obj, done: !obj.done };
+    if (obj.id == taskId) return { ...obj, completed: !(obj.completed) };
     else return obj;
   });
   tasks = newTasks;
@@ -51,19 +52,27 @@ function handleInputKeypress(e) {
   if (e.key == "Enter") {
     const text = e.target.value;
     if (!text) {
-      showNotification("enter todo");
+      alert("enter todo");
       return;
     }
     const task = {
       id: Date.now(),
-      text: text,
-      done: false,
+      title: text,
+      completed: false,
     };
     e.target.value = "";
     addTask(task);
   }
 }
 addTaskInput.addEventListener("keypress", handleInputKeypress);
+
+async function fetchData(){
+    let resObj = await fetch('https://jsonplaceholder.typicode.com/todos');
+    let jsonObj = await resObj.json();
+    tasks = jsonObj.slice(0,10);
+    renderList();
+}
+fetchData();
 
 // #example of event Deligation
 
