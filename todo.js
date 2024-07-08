@@ -83,8 +83,8 @@ var toDoListApp = (function () {
   initializeApp();
 
   return {
-    tasks: tasks,
-    markTaskAsComplete: markTaskAsComplete,
+    tasks,
+    markTaskAsComplete,
     deleteTask: deleteTask,
   };
 
